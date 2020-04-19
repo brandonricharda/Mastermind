@@ -4,6 +4,8 @@ class Mastermind
 
     def initialize
         @chosen_code = chooseCode
+        @check_finish = false
+        @turns = 1
     end
     
     def chooseCode
@@ -18,22 +20,38 @@ class Mastermind
         code
     end
 
-    def checkGuess(guess)
-        if guess == @chosen_code
-            puts "You got it!"
-            true #this will be the implicit return that tells the startGame method it can stop running
-        else
-            #code goes here that analyzes the guess and returns feedback on how accurate it was
+    def startGame
+        while @turns <= 10 && !@check_finish
+            choices
+            @turns += 1
         end
     end
 
-    def code
-        @chosen_code
-    end
+    def checkGuess(guess)
+        feedback = []
+        if guess == @chosen_code
+            puts "You got it!"
+            @check_finish = true
+        else
+            guess.each_with_index do |item, index|
+                if @chosen_code[index] == item
+                    feedback.push(green(item))
+                elsif @chosen_code.include?(item)
+                    feedback.push(red(item))
+                end
+            end
 
-    def startGame
-        turns = 0
-        #code goes here that allows the choices method to run for 10 turns or until the correct guess is chosen
+            if @turns <= 10 && !@check_finish
+                puts ""
+                puts "---"
+                puts "You guessed: #{feedback.join(", ")}."
+                puts "Items in green are what you got right (both color and position). Items in red are in the wrong position."
+                puts "Remaining turns: #{10 - @turns}."
+                puts "---"
+                puts ""
+            end
+            puts "Game over! The code was #{@chosen_code}." unless @turns < 10
+        end
     end
 
     def choices
@@ -57,10 +75,26 @@ class Mastermind
         checkGuess(guess)
     end
 
+    def colorize(text, color_code)
+        "\e[#{color_code}m#{text}\e[0m"
+    end
+
+    def red(text)
+        colorize(text, 31)
+    end
+
+    def green(text)
+        colorize(text, 32)
+    end
+
+    def code
+        @chosen_code
+    end
+
 end
 
 test = Mastermind.new
 
 puts test.code
 
-test.choices
+test.startGame
