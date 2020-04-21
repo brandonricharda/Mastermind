@@ -1,5 +1,3 @@
-#Note: It'd be a fun challenge to code this in a way where the code itself is only visible to a specific function. Every time the system wants to check, it has to run that function.
-
 class Mastermind
 
     def initialize
@@ -87,14 +85,8 @@ class Mastermind
         colorize(text, 32)
     end
 
-    def code
-        @chosen_code
-    end
-
 end
 
 test = Mastermind.new
-
-puts test.code
 
 test.startGame
