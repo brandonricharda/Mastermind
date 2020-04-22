@@ -1,22 +1,29 @@
 class Game
-
+    
     def initialize(mode)
-        @@check_finish = false
-        @@turns = 1
-        mode.new
+        mode.new(1, false)
+    end
+
+    def colorize(text, color_code)
+        "\e[#{color_code}m#{text}\e[0m"
+    end
+
+    def red(text)
+        colorize(text, 31)
+    end
+
+    def green(text)
+        colorize(text, 32)
     end
 
 end
 
-module Game
-    @check_finish = false
-    @turns = 1
-end
-
 class HumanMastermind < Game
 
-    def initialize
+    def initialize(turns, flag)
         @chosen_code = chooseCode
+        @turns = turns
+        @check_finish = flag
         startGame
     end
 
@@ -33,9 +40,9 @@ class HumanMastermind < Game
     end
 
     def startGame
-        while @@turns <= 10 && !@@check_finish
+        while @turns <= 10 && !@check_finish
             choices
-            @@turns += 1
+            @turns += 1
         end
     end
 
@@ -57,14 +64,14 @@ class HumanMastermind < Game
                 next
             end
         end 
-        checkGuess(guess)
+        localCheckGuess(guess)
     end
 
-    def checkGuess(guess)
+    def localCheckGuess(guess)
         feedback = []
         if guess == @chosen_code
             puts "You got it!"
-            @@check_finish = true
+            @check_finish = true
         else
             guess.each_with_index do |item, index|
                 if @chosen_code[index] == item
@@ -74,42 +81,31 @@ class HumanMastermind < Game
                 end
             end
 
-            if @@turns <= 10 && !@@check_finish
+            if @turns <= 10 && !@check_finish
                 puts ""
                 puts "---"
                 puts "You guessed: #{feedback.join(", ")}."
                 puts "Items in green are what you got right (both color and position). Items in red are in the wrong position."
-                puts "Remaining turns: #{10 - @@turns}."
+                puts "Remaining turns: #{10 - @turns}."
                 puts "---"
                 puts ""
             end
-            puts "Game over! The code was #{@chosen_code}." unless @@turns < 10
+            puts "Game over! The code was #{@chosen_code}." unless @turns < 10
         end
-    end
-
-    def colorize(text, color_code)
-        "\e[#{color_code}m#{text}\e[0m"
-    end
-
-    def red(text)
-        colorize(text, 31)
-    end
-
-    def green(text)
-        colorize(text, 32)
     end
 
 end
 
 class ComputerMastermind < Game
 
-    def initialize
-        chooseCode
+    def initialize(turns, flag)
+        @check_finish = flag
+        @turns = turns
+        @chosen_code = chooseCode
     end
 
     def chooseCode
         colors = ["RED", "BLUE", "GREEN", "BROWN", "WHITE", "BLACK"]
-        description = {0 => "first", 1 => "next"}
         code = []
         retry_flag = false
         until code.length == 6
@@ -119,6 +115,7 @@ class ComputerMastermind < Game
             value = gets.chomp.upcase
             if colors.include?(value)
                 code.push(value)
+                colors.delete(value)
                 retry_flag = false
             else
                 puts "Please select from the following options (case insensitive): #{colors}."
@@ -126,6 +123,11 @@ class ComputerMastermind < Game
             end
         end
         code
+    end
+
+    def computerGuess
+        colors = {1 => "RED", 2 => "BLUE", 3 => "GREEN", 4 => "BROWN", 5 => "WHITE", 6 => "BLACK"}
+
     end
 
 end
