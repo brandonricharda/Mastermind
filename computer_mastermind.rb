@@ -1,25 +1,29 @@
 require './game.rb'
 
-class ComputerMastermind < Game
+class ComputerMastermind
 
-    def initialize(turns, flag)
-        @check_finish = flag
-        @turns = turns
+    include Game
+
+    def initialize
         @chosen_code = chooseCode
+        @turns = 1
+        @check_finish = false
+        @player = "Computer"
+        #startGame
     end
 
     def chooseCode
-        colors = ["RED", "BLUE", "GREEN", "BROWN", "WHITE", "BLACK"]
+        options = colors.values
         code = []
         retry_flag = false
         until code.length == 6
             description = code.length == 0 ? "first" : "next"
             puts "Please select the #{description} color for your code." unless retry_flag
-            puts "Choose from: #{colors}." unless retry_flag
+            puts "Choose from: #{options.join(", ")}." unless retry_flag
             value = gets.chomp.upcase
-            if colors.include?(value)
+            if options.include?(value)
                 code.push(value)
-                colors.delete(value)
+                options.delete(value)
                 retry_flag = false
             else
                 puts "Please select from the following options (case insensitive): #{colors}."
@@ -36,4 +40,4 @@ class ComputerMastermind < Game
 
 end
 
-test = Game.new(HumanMastermind)
+test = ComputerMastermind.new

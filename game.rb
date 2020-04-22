@@ -1,8 +1,4 @@
-class Game
-    
-    def initialize(mode)
-        mode.new(1, false)
-    end
+module Game
 
     def colorize(text, color_code)
         "\e[#{color_code}m#{text}\e[0m"
@@ -14,6 +10,10 @@ class Game
 
     def green(text)
         colorize(text, 32)
+    end
+
+    def colors
+        {1 => "RED", 2 => "BLUE", 3 => "GREEN", 4 => "BROWN", 5 => "WHITE", 6 => "BLACK"}
     end
 
     def checkGuess(guess, code, turns, player, status)

@@ -1,17 +1,18 @@
 require './game.rb'
 
-class HumanMastermind < Game
+class HumanMastermind
 
-    def initialize(turns, flag)
+    include Game
+
+    def initialize
         @chosen_code = chooseCode
-        @turns = turns
-        @check_finish = flag
+        @turns = 1
+        @check_finish = false
         @player = "You"
         startGame
     end
 
     def chooseCode
-        colors = {1 => "RED", 2 => "BLUE", 3 => "GREEN", 4 => "BROWN", 5 => "WHITE", 6 => "BLACK"}
         code = []
         until code.length == 6
             value = rand(1..6)
@@ -31,16 +32,16 @@ class HumanMastermind < Game
 
     def choices
         phrases = {1 => "first", 2 => "second", 3 => "third", 4 => "fourth", 5 => "fifth", 6 => "sixth"}
-        remaining_options = ["red", "blue", "green", "brown", "white", "black"]
+        remaining_options = colors.values
         picks = 1
         guess = []
         while picks <= 6
             puts "What do you think the #{phrases[picks]} color is?"
             puts "Your options are: #{remaining_options.join(", ")}."
             choice = gets.chomp
-            if remaining_options.include?(choice.downcase)
+            if remaining_options.include?(choice.upcase)
                 guess.push(choice.upcase)
-                remaining_options.delete(choice.downcase)
+                remaining_options.delete(choice.upcase)
                 picks += 1
             else
                 puts "Pssst! Choose one of the available colors!"
@@ -62,4 +63,4 @@ class HumanMastermind < Game
 
 end
 
-test = Game.new(HumanMastermind)
+test = HumanMastermind.new
