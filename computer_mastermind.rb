@@ -9,7 +9,8 @@ class ComputerMastermind
         @turns = 1
         @check_finish = false
         @player = "Computer"
-        #startGame
+        @feedback = []
+        startGame
     end
 
     def chooseCode
@@ -33,11 +34,48 @@ class ComputerMastermind
         code
     end
 
-    def computerGuess
-        colors = {1 => "RED", 2 => "BLUE", 3 => "GREEN", 4 => "BROWN", 5 => "WHITE", 6 => "BLACK"}
-
+    def startGame
+        while @turns <= 10 && !@check_finish
+            computerGuess
+        end
     end
 
+    def computerGuess
+        if @turns == 1
+            guess = generateCode
+            @feedback = checkGuess(guess, @chosen_code, @turns, @player, @check_finish)
+            @turns += 1
+            guess
+        else
+            guess = intelligentGuess(@feedback)
+            @feedback = checkGuess(guess, @chosen_code, @turns, @player, @check_finish)
+            @turns += 1
+            guess
+        end
+    end
+
+    def intelligentGuess(feedback)
+        new_guess = ["a", "b", "c", "d", "e", "f"]
+        remaining_options = colors
+        correct = feedback.select { |item| item == item.upcase }
+        
+        correct.each do |item|
+            remaining_options.delete(remaining_options.key(item))
+        end
+        
+        feedback.each_with_index do |item, index|
+            if item == item.upcase
+                new_guess[index] = item
+            else
+                array = remaining_options.keys
+                value = array.sample
+                new_value = remaining_options[value]
+                new_guess[index] = new_value
+                remaining_options.delete(remaining_options.key(new_value))
+            end
+        end
+        new_guess
+    end
 end
 
 test = ComputerMastermind.new

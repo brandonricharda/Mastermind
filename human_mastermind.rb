@@ -5,22 +5,11 @@ class HumanMastermind
     include Game
 
     def initialize
-        @chosen_code = chooseCode
+        @chosen_code = generateCode
         @turns = 1
         @check_finish = false
         @player = "You"
         startGame
-    end
-
-    def chooseCode
-        code = []
-        until code.length == 6
-            value = rand(1..6)
-            if !code.include?(colors[value])
-                code.push(colors[value])
-            end
-        end
-        code
     end
 
     def startGame
