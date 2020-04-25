@@ -2,4 +2,4 @@
 
 This exercise is part of The Odin Project. The goal is to create a game of mastermind that is played on the command line.
 
-This branch will be a simple version where the computer chooses the code and the user guesses. Subsequent versions will flip that.
+To run the game, download all files in a folder. From the directory, run $ ruby control.rb. You will be presented with an option to begin the game.
