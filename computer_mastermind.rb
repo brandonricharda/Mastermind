@@ -58,6 +58,8 @@ class ComputerMastermind
         new_guess = ["a", "b", "c", "d", "e", "f"]
         remaining_options = colors
         correct = feedback.select { |item| item == item.upcase }
+
+        @check_finish = true unless correct.length < 6
         
         correct.each do |item|
             remaining_options.delete(remaining_options.key(item))
